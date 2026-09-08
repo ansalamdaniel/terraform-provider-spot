@@ -13,12 +13,13 @@ The `autopilotnodepool` resource manages an Autopilot Node Pool within a cloudsp
 ## Example Usage
 
 ```terraform
-# Creates an autopilot node pool that fills 12 vCPUs of 4 GiB/vCPU capacity in
-# us-central-dfw-1, never bidding more than 12.00 USD/hour. Spot picks the
-# cheapest qualifying server classes and packs them to exactly the target.
+# Creates an autopilot node pool that fills 12 vCPUs of 4 GiB/vCPU capacity,
+# never bidding more than 12.00 USD/hour. Spot picks the cheapest qualifying
+# server classes and packs them to exactly the target.
 resource "spot_autopilotnodepool" "example" {
   cloudspace_name = "example"
-  region          = "us-central-dfw-1"
+  # region is optional: it defaults to the referenced cloudspace's region.
+  # Set it explicitly only if you need to pin it (it must match the cloudspace).
   vcpu = {
     total = 12
   }
@@ -40,7 +41,6 @@ resource "spot_autopilotnodepool" "example" {
 
 - `budget_per_hour` (String) Hourly budget (USD), read as a bid ceiling. Positive, up to three decimal places.
 - `cloudspace_name` (String) The name of the cloudspace the resulting nodes join.
-- `region` (String) Region whose server classes are eligible for this autopilot pool. Immutable.
 - `vcpu` (Attributes) Total vCPU target Spot fills exactly via a combination pack. (see [below for nested schema](#nestedatt--vcpu))
 
 ### Optional
@@ -49,6 +49,7 @@ resource "spot_autopilotnodepool" "example" {
 - `annotations` (Map of String) Annotations to be applied to the nodes of the node pool
 - `labels` (Map of String) Labels to be applied to the nodes of the node pool
 - `memory_per_vcpu` (String) Required memory-to-vCPU ratio in GB: any, 2, 4, or 8. Defaults to any.
+- `region` (String) Region whose server classes are eligible for this autopilot pool. Defaults to the referenced cloudspace's region when omitted. Immutable.
 - `taints` (Attributes List) Kubernetes taints to be applied to the nodes of the node pool (see [below for nested schema](#nestedatt--taints))
 - `vcpu_per_node` (Attributes) Optionally bounds the size of each individual node/server. (see [below for nested schema](#nestedatt--vcpu_per_node))
 

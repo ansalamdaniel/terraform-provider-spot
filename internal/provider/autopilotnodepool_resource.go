@@ -132,6 +132,18 @@ func (r *autopilotnodepoolResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
+	// Region defaults to the referenced cloudspace's region when the user omits it. The nodes join
+	// that cloudspace, so the regions must agree (the webhook rejects a mismatch); inferring here
+	// spares the user from repeating it.
+	if data.Region.IsNull() || data.Region.IsUnknown() || data.Region.ValueString() == "" {
+		cs := &ngpcv1.CloudSpace{}
+		if err := r.ngpcClient.Get(ctx, ktypes.NamespacedName{Name: data.CloudspaceName.ValueString(), Namespace: namespace}, cs); err != nil {
+			resp.Diagnostics.AddError("Failed to get cloudspace to infer region", err.Error())
+			return
+		}
+		data.Region = types.StringValue(cs.Spec.Region)
+	}
+
 	spec, diags := r.buildSpec(ctx, &data)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {

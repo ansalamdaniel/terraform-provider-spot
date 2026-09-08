@@ -183,11 +183,13 @@ func AutopilotnodepoolResourceSchema(ctx context.Context) schema.Schema {
 				},
 			},
 			"region": schema.StringAttribute{
-				Required:            true,
-				Description:         "Region whose server classes are eligible for this autopilot pool. Immutable.",
-				MarkdownDescription: "Region whose server classes are eligible for this autopilot pool. Immutable.",
+				Optional:            true,
+				Computed:            true,
+				Description:         "Region whose server classes are eligible for this autopilot pool. Defaults to the referenced cloudspace's region when omitted. Immutable.",
+				MarkdownDescription: "Region whose server classes are eligible for this autopilot pool. Defaults to the referenced cloudspace's region when omitted. Immutable.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"taints": schema.ListNestedAttribute{
