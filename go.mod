@@ -1,8 +1,6 @@
 module github.com/rackerlabs/terraform-provider-spot
 
-go 1.22.2
-
-toolchain go1.22.3
+go 1.24.0
 
 require (
 	github.com/RSS-Engineering/ngpc-cp v0.0.0-00010101000000-000000000000
@@ -40,7 +38,7 @@ require (
 	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
-	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
+	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -116,7 +114,7 @@ require (
 	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.26.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/term v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
@@ -129,7 +127,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/apiextensions-apiserver v0.30.3 // indirect
-	k8s.io/client-go v0.30.3 // indirect
+	k8s.io/client-go v12.0.0+incompatible // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240521193020-835d969ad83a // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
@@ -148,4 +146,17 @@ replace github.com/RSS-Engineering/ngpc-cp => ../spot-cp
 replace (
 	github.com/platform9/pf9-sdk-go => ../spot-cp/third_party/platform9/pf9-sdk-go
 	github.com/platform9/vcp => ../spot-cp/third_party/platform9/vcp
+)
+
+// ngpc-cp (../spot-cp) requires k8s.io/client-go v12.0.0+incompatible and fixes it with its own
+// replace directives. Go does not apply a dependency's replaces in the consuming module, so mirror
+// the k8s.io pins here to keep everything on v0.30.3 (matching controller-runtime v0.18.4).
+replace (
+	k8s.io/api => k8s.io/api v0.30.3
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.30.3
+	k8s.io/apimachinery => k8s.io/apimachinery v0.30.3
+	k8s.io/apiserver => k8s.io/apiserver v0.30.3
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.30.3
+	k8s.io/client-go => k8s.io/client-go v0.30.3
+	k8s.io/component-base => k8s.io/component-base v0.30.3
 )

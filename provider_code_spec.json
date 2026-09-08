@@ -1093,6 +1093,488 @@
 					}
 				]
 			}
+		},
+		{
+			"name": "autopilotnodepool",
+			"schema": {
+				"attributes": [
+					{
+						"name": "id",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The id of the autopilotnodepool.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							],
+							"deprecation_message": "Use the name attribute instead"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The name of the autopilotnodepool.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "last_updated",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The last time the autopilotnodepool was updated.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "cloudspace_name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the cloudspace the resulting nodes join.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.RequiresReplace()"
+									}
+								}
+							],
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(1, 63)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											},
+											{
+												"path": "regexp"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(`^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$`), \"Must be valid kubernetes name\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "region",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Region whose server classes are eligible for this autopilot pool. Immutable.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.RequiresReplace()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "budget_per_hour",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Hourly budget (USD), read as a bid ceiling. Positive, up to three decimal places.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											},
+											{
+												"path": "regexp"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(`^\\d+(\\.\\d{1,3})?$`), \"Must be a positive number with up to three decimal places\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "vcpu",
+						"single_nested": {
+							"computed_optional_required": "required",
+							"description": "Total vCPU target Spot fills exactly via a combination pack.",
+							"attributes": [
+								{
+									"name": "total",
+									"int64": {
+										"computed_optional_required": "required",
+										"description": "Total vCPUs to fill (a positive multiple of the smallest usable node).",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+														}
+													],
+													"schema_definition": "int64validator.AtLeast(1)"
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "vcpu_per_node",
+						"single_nested": {
+							"computed_optional_required": "optional",
+							"description": "Optionally bounds the size of each individual node/server.",
+							"attributes": [
+								{
+									"name": "min",
+									"int64": {
+										"computed_optional_required": "optional",
+										"description": "Minimum vCPUs per node.",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+														}
+													],
+													"schema_definition": "int64validator.AtLeast(1)"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "max",
+									"int64": {
+										"computed_optional_required": "optional",
+										"description": "Maximum vCPUs per node.",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+														}
+													],
+													"schema_definition": "int64validator.AtLeast(1)"
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "memory_per_vcpu",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Required memory-to-vCPU ratio in GB: any, 2, 4, or 8. Defaults to any.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\"any\", \"2\", \"4\", \"8\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "allocation_strategy",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "How eligible server classes are ranked. Only LowestPrice is accepted.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\"LowestPrice\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "labels",
+						"map": {
+							"computed_optional_required": "optional",
+							"description": "Labels to be applied to the nodes of the node pool",
+							"element_type": {
+								"string": {}
+							}
+						}
+					},
+					{
+						"name": "annotations",
+						"map": {
+							"computed_optional_required": "optional",
+							"description": "Annotations to be applied to the nodes of the node pool",
+							"element_type": {
+								"string": {}
+							}
+						}
+					},
+					{
+						"name": "taints",
+						"list_nested": {
+							"computed_optional_required": "optional",
+							"description": "Kubernetes taints to be applied to the nodes of the node pool",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "key",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The taint key to be applied"
+										}
+									},
+									{
+										"name": "value",
+										"string": {
+											"computed_optional_required": "optional",
+											"description": "The taint value"
+										}
+									},
+									{
+										"name": "effect",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The taint effect (NoSchedule, PreferNoSchedule, or NoExecute)",
+											"validators": [
+												{
+													"custom": {
+														"imports": [
+															{
+																"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+															}
+														],
+														"schema_definition": "stringvalidator.OneOf(\"NoSchedule\", \"PreferNoSchedule\", \"NoExecute\")"
+													}
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "phase",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Fulfillment phase of the autopilot pool.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "target_vcpus",
+						"int64": {
+							"computed_optional_required": "computed",
+							"description": "vCPU count Spot is filling (== vcpu.total).",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+											}
+										],
+										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "managed_vcpus",
+						"int64": {
+							"computed_optional_required": "computed",
+							"description": "Total vCPUs currently won across child pools.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+											}
+										],
+										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "managed_memory_gb",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Total memory (GB) currently won across child pools.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "allocations",
+						"list_nested": {
+							"computed_optional_required": "computed",
+							"description": "Per-server-class allocation breakdown.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+											}
+										],
+										"schema_definition": "listplanmodifier.UseStateForUnknown()"
+									}
+								}
+							],
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "server_class",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "The server class fulfilling this allocation."
+										}
+									},
+									{
+										"name": "spot_node_pool",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Name of the child SpotNodePool fulfilling this allocation."
+										}
+									},
+									{
+										"name": "market_price_per_hour",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Market clearing price per hour (USD) for this class."
+										}
+									},
+									{
+										"name": "bid_price_per_hour",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Bid price per hour (USD) placed for this class."
+										}
+									},
+									{
+										"name": "vcpu_per_node",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "vCPUs per node for this class."
+										}
+									},
+									{
+										"name": "memory_gb_per_node",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Memory (GB) per node for this class."
+										}
+									},
+									{
+										"name": "desired_nodes",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "Desired node count for this allocation."
+										}
+									},
+									{
+										"name": "won_nodes",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "Won node count for this allocation."
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
 		}
 	],
 	"datasources": [
@@ -2133,6 +2615,301 @@
 													}
 												}
 											]
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "autopilotnodepool",
+			"schema": {
+				"attributes": [
+					{
+						"name": "id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Id of the autopilotnodepool",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/path"
+											}
+										],
+										"schema_definition": "stringvalidator.AtLeastOneOf(path.Expressions{path.MatchRoot(\"name\"), path.MatchRoot(\"id\")}...)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Name of the autopilotnodepool",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(1, 63)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											},
+											{
+												"path": "regexp"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(`^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$`), \"Must be valid kubernetes name\")"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/path"
+											}
+										],
+										"schema_definition": "stringvalidator.AtLeastOneOf(path.Expressions{path.MatchRoot(\"name\"), path.MatchRoot(\"id\")}...)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "cloudspace_name",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The name of the cloudspace the resulting nodes join."
+						}
+					},
+					{
+						"name": "region",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Region whose server classes are eligible."
+						}
+					},
+					{
+						"name": "budget_per_hour",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Hourly budget (USD) read as a bid ceiling."
+						}
+					},
+					{
+						"name": "vcpu",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Total vCPU target.",
+							"attributes": [
+								{
+									"name": "total",
+									"int64": {
+										"computed_optional_required": "computed",
+										"description": "Total vCPUs to fill."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "vcpu_per_node",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Per-node vCPU bounds.",
+							"attributes": [
+								{
+									"name": "min",
+									"int64": {
+										"computed_optional_required": "computed",
+										"description": "Minimum vCPUs per node."
+									}
+								},
+								{
+									"name": "max",
+									"int64": {
+										"computed_optional_required": "computed",
+										"description": "Maximum vCPUs per node."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "memory_per_vcpu",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Memory-to-vCPU ratio in GB."
+						}
+					},
+					{
+						"name": "allocation_strategy",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Allocation strategy."
+						}
+					},
+					{
+						"name": "labels",
+						"map": {
+							"computed_optional_required": "computed",
+							"description": "Labels applied to the nodes.",
+							"element_type": {
+								"string": {}
+							}
+						}
+					},
+					{
+						"name": "annotations",
+						"map": {
+							"computed_optional_required": "computed",
+							"description": "Annotations applied to the nodes.",
+							"element_type": {
+								"string": {}
+							}
+						}
+					},
+					{
+						"name": "taints",
+						"list_nested": {
+							"computed_optional_required": "computed",
+							"description": "Taints applied to the nodes.",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "key",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Taint key."
+										}
+									},
+									{
+										"name": "value",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Taint value."
+										}
+									},
+									{
+										"name": "effect",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Taint effect."
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "phase",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Fulfillment phase."
+						}
+					},
+					{
+						"name": "target_vcpus",
+						"int64": {
+							"computed_optional_required": "computed",
+							"description": "vCPU target."
+						}
+					},
+					{
+						"name": "managed_vcpus",
+						"int64": {
+							"computed_optional_required": "computed",
+							"description": "Won vCPUs."
+						}
+					},
+					{
+						"name": "managed_memory_gb",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Won memory (GB)."
+						}
+					},
+					{
+						"name": "allocations",
+						"list_nested": {
+							"computed_optional_required": "computed",
+							"description": "Per-class allocation breakdown.",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "server_class",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "The server class fulfilling this allocation."
+										}
+									},
+									{
+										"name": "spot_node_pool",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Name of the child SpotNodePool fulfilling this allocation."
+										}
+									},
+									{
+										"name": "market_price_per_hour",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Market clearing price per hour (USD) for this class."
+										}
+									},
+									{
+										"name": "bid_price_per_hour",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Bid price per hour (USD) placed for this class."
+										}
+									},
+									{
+										"name": "vcpu_per_node",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "vCPUs per node for this class."
+										}
+									},
+									{
+										"name": "memory_gb_per_node",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Memory (GB) per node for this class."
+										}
+									},
+									{
+										"name": "desired_nodes",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "Desired node count for this allocation."
+										}
+									},
+									{
+										"name": "won_nodes",
+										"int64": {
+											"computed_optional_required": "computed",
+											"description": "Won node count for this allocation."
 										}
 									}
 								]

@@ -236,6 +236,7 @@ func (p *spotProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewServerclassDataSource,
 		NewServerclassesDataSource,
 		NewOndemandnodepoolDataSource,
+		NewAutopilotnodepoolDataSource,
 	}
 }
 
@@ -244,6 +245,7 @@ func (p *spotProvider) Resources(ctx context.Context) []func() resource.Resource
 		NewCloudspaceResource,
 		NewSpotnodepoolResource,
 		NewOndemandnodepoolResource,
+		NewAutopilotnodepoolResource,
 	}
 }
 
